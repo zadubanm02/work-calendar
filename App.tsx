@@ -5,10 +5,12 @@ import CalendarHeader from "./components/CalendarHeader";
 import { useState, useMemo } from "react";
 import CalendarArrow from "./components/CalendarArrow";
 import moment from "moment";
+import { useCalendar } from "./hooks/useCalendar";
+import { storeWorkDates } from "./lib/asyncStorage";
 
 export default function App() {
   // locales
-  moment.locale("sk", {
+  moment.updateLocale("sk", {
     months: [
       "Január",
       "Február",
@@ -68,17 +70,27 @@ export default function App() {
   };
   LocaleConfig.defaultLocale = "sk";
 
+  // hooks
+
+  const {
+    selectedDate,
+    setSelectedDate,
+    isSelected,
+    workDays,
+    saveWorkWeeks,
+    deleteAll,
+  } = useCalendar();
+
   const today = new Date().toDateString();
-  const [selected, setSelected] = useState(today);
   const marked = useMemo(
     () => ({
-      [selected]: {
+      [selectedDate as string]: {
         selected: true,
         selectedColor: "#222222",
         selectedTextColor: "yellow",
       },
     }),
-    [selected]
+    [selectedDate]
   );
 
   return (
@@ -86,7 +98,7 @@ export default function App() {
       <StatusBar style="auto" />
       <View style={styles.header}>
         <Text style={styles.headerText}>Pracovný kalendár</Text>
-        <Pressable style={styles.editButton}>
+        <Pressable onPress={() => saveWorkWeeks()} style={styles.editButton}>
           <Text style={{ fontWeight: "bold", color: "#fff" }}>Upraviť</Text>
         </Pressable>
       </View>
@@ -94,7 +106,11 @@ export default function App() {
       <Calendar
         onDayPress={(day) => {
           console.log("DAY", day);
-          setSelected(day.dateString);
+          const now = moment();
+          const monday = now.clone().weekday(1);
+          console.log("Monday", monday.format("yyyy-MM-DD"));
+
+          setSelectedDate(day.dateString);
         }}
         onDayLongPress={(day) => console.log("onDayLongPress", day)}
         onMonthChange={(date) => console.log("onMonthChange", date)}
@@ -120,10 +136,12 @@ export default function App() {
           textDayFontWeight: "bold",
           textMonthFontWeight: "bold",
         }}
+        // marked days are work days
+        markingType={"period"}
+        markedDates={workDays}
 
         // {...props}
       />
-      <CalendarHeader headerText="Mesiac" />
     </SafeAreaView>
   );
 }
