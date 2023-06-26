@@ -147,10 +147,26 @@ export enum WorkWeek {
 */
 
 export const calculateWorkDays = (_workWeek: WorkWeek) => {
+  moment.updateLocale("sk", {
+    months: [
+      "Január",
+      "Február",
+      "Marec",
+      "Apríl",
+      "Máj",
+      "Jún",
+      "Júl",
+      "August",
+      "September",
+      "Október",
+      "November",
+      "December",
+    ],
+  });
   const dates: string[] = [];
   // today and monday of todays week
   const now = moment();
-  const firstMonday = now.clone();
+  const firstMonday = now.clone().startOf("week");
   // format("yyyy-MM-DD")
   // counters
   // count days from 1 (monday) to 7 (sunday) then back to 1
@@ -162,29 +178,33 @@ export const calculateWorkDays = (_workWeek: WorkWeek) => {
 
   // loop for 57 weeks from
   for (weekCount; weekCount < 57; weekCount++) {
-    week.add(weekCount, "week");
+    if (weekCount > 0) {
+      week.add(weekCount, "week");
+    }
     for (weekDayCount; weekDayCount < 8; weekDayCount++) {
       if (workWeek === WorkWeek.Short) {
-        if (weekDayCount === 3 || weekDayCount === 4 || weekDayCount === 5) {
+        if (weekDayCount === 2 || weekDayCount === 3 || weekDayCount === 4) {
           dates.push(week.weekday(weekDayCount).format("yyyy-MM-DD"));
         }
       } else {
         if (
+          weekDayCount === 0 ||
           weekDayCount === 1 ||
-          weekDayCount === 2 ||
-          weekDayCount === 6 ||
-          weekDayCount === 7
+          weekDayCount === 5 ||
+          weekDayCount === 6
         ) {
           dates.push(week.weekday(weekDayCount).format("yyyy-MM-DD"));
         }
       }
     }
-    weekDayCount = 1;
+    weekDayCount = 0;
     if (workWeek === WorkWeek.Short) {
       workWeek = WorkWeek.Long;
     } else {
       workWeek = WorkWeek.Short;
     }
+    week = moment().startOf("week");
+    console.log("PRVY DEN V TYZDNi", week.weekday(0).format("yyyy-MM-DD"));
   }
 
   return dates;
