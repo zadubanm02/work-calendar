@@ -6,8 +6,36 @@ import {
   resetAllWorkDays,
   storeWorkDates,
 } from "../lib/asyncStorage";
+import moment from "moment";
 
 export const useCalendar = () => {
+  moment.updateLocale("sk", {
+    months: [
+      "Január",
+      "Február",
+      "Marec",
+      "Apríl",
+      "Máj",
+      "Jún",
+      "Júl",
+      "August",
+      "September",
+      "Október",
+      "November",
+      "December",
+    ],
+    days: [
+      "Pondelok",
+      "Utorok",
+      "Streda",
+      "Štrvtok",
+      "Piatok",
+      "Sobota",
+      "Nedeľa",
+    ],
+  });
+  moment.locale("sk");
+
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [workDays, setWorkDays] = useState<{}>({});
   const [workWeek, setWorkWeek] = useState<WorkWeek>(WorkWeek.Short);
@@ -32,9 +60,9 @@ export const useCalendar = () => {
     await resetAllWorkDays();
   };
 
-  //   useEffect(() => {
-
-  //   }, [])
+  useEffect(() => {
+    setSelectedDate(moment().format("dddd DD.MM.YYYY"));
+  }, []);
 
   return {
     workDays,

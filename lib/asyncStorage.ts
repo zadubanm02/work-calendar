@@ -214,7 +214,7 @@ const transform = (dates: string[]) => {
   let newData = {};
   // '2012-05-22': {color: '#70d7c7', textColor: 'white'},
   dates.forEach((day) => {
-    newData[day] = { color: "#1960EA", textColor: "white" };
+    newData[day] = { color: "rgb(71 85 105)", textColor: "white" };
   });
 
   return newData;
