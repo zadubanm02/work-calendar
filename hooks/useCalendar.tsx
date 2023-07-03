@@ -36,7 +36,9 @@ export const useCalendar = () => {
   });
   moment.locale("sk");
 
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string>(
+    moment().format("dddd DD.MM.YYYY")
+  );
   const [workDays, setWorkDays] = useState<{}>({});
   const [workWeek, setWorkWeek] = useState<WorkWeek>(WorkWeek.Short);
 
@@ -59,10 +61,6 @@ export const useCalendar = () => {
   const deleteAll = async () => {
     await resetAllWorkDays();
   };
-
-  useEffect(() => {
-    setSelectedDate(moment().format("dddd DD.MM.YYYY"));
-  }, []);
 
   return {
     workDays,

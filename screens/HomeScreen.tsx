@@ -91,17 +91,19 @@ export default function HomeScreen() {
     deleteAll,
   } = useCalendar();
 
-  const today = new Date().toDateString();
-  const marked = useMemo(
-    () => ({
-      [selectedDate as string]: {
-        selected: true,
-        selectedColor: "#222222",
-        selectedTextColor: "yellow",
-      },
-    }),
-    [selectedDate]
-  );
+  // TODO adjust this function here to make it selected and marked
+  const marked = useMemo(() => {
+    const dates = {
+      ...workDays,
+    };
+    dates[selectedDate] = {
+      ...dates[selectedDate],
+      selected: true,
+      color: "#000",
+      textColor: "#fff",
+    };
+    return dates;
+  }, [selectedDate, workDays]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -115,21 +117,14 @@ export default function HomeScreen() {
 
       <Calendar
         onDayPress={(day) => {
-          console.log("DAY", day);
-          const now = moment();
-          const monday = now.clone().weekday(1);
-          console.log("Monday", monday.format("yyyy-MM-DD"));
-
-          setSelectedDate(day.dateString);
+          return setSelectedDate(day.dateString);
         }}
         onDayLongPress={(day) => console.log("onDayLongPress", day)}
         onMonthChange={(date) => console.log("onMonthChange", date)}
         onPressArrowLeft={(goToPreviousMonth) => {
-          console.log("onPressArrowLeft");
           goToPreviousMonth();
         }}
         onPressArrowRight={(goToNextMonth) => {
-          console.log("onPressArrowRight");
           goToNextMonth();
         }}
         // custom rendered components
@@ -145,10 +140,13 @@ export default function HomeScreen() {
           textDayFontSize: 20,
           textDayFontWeight: "bold",
           textMonthFontWeight: "bold",
+          selectedDayBackgroundColor: "#000",
+          selectedDayTextColor: "#fff",
+          todayTextColor: "rgb(153 27 27)",
         }}
         // marked days are work days
         markingType={"period"}
-        markedDates={workDays}
+        markedDates={marked}
 
         // {...props}
       />

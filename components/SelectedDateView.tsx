@@ -1,5 +1,5 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import TimeButton from "./TimeButton";
 import { AntDesign } from "@expo/vector-icons";
 import { useCalendar } from "../hooks/useCalendar";
@@ -25,6 +25,7 @@ export default function SelectedDateView() {
   const route = useRoute<DayDetailScreenRouteProp>();
   const isWorkDay = true;
   const params = route.params;
+
   return (
     <ScrollView style={styles.container}>
       {params ? (
