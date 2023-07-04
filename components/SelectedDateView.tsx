@@ -10,6 +10,9 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import TopNavigation from "./TopNavigation";
 import { RootStackParamList } from "../navigation";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useDay } from "../hooks/useDay";
+import NoteRow from "./NoteRow";
+import { mapDayString } from "../lib/utils";
 
 type DayDetailScreenRouteProp = RouteProp<RootStackParamList, "DayDetail">;
 type StackNavigationProp = NativeStackNavigationProp<
@@ -17,14 +20,21 @@ type StackNavigationProp = NativeStackNavigationProp<
   "DayDetail"
 >;
 
+type Props = {
+  date: string;
+};
+
 export default function SelectedDateView() {
+  const { selectedDate, setSelectedDate } = useCalendar();
+  const { selectedDayData } = useDay();
   moment.locale("sk");
 
-  const { selectedDate } = useCalendar();
   const navigation = useNavigation();
   const route = useRoute<DayDetailScreenRouteProp>();
   const isWorkDay = true;
   const params = route.params;
+
+  const handleDelete = (note: string) => {};
 
   return (
     <ScrollView style={styles.container}>
@@ -39,7 +49,7 @@ export default function SelectedDateView() {
           }}
         >
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-            {selectedDate}
+            {mapDayString(selectedDate)}
           </Text>
           <Pressable
             onPress={() =>
@@ -72,6 +82,23 @@ export default function SelectedDateView() {
           <AntDesign name="plus" size={18} color="white" />
           <Text style={{ color: "#fff", marginLeft: 2 }}>Nová poznámka</Text>
         </Pressable>
+      </View>
+      {/* Container for notes */}
+      <View>
+        <NoteRow onDelete={() => console.log("Hello")} note="Zubar 8:00" />
+        <NoteRow
+          onDelete={() => console.log("Hello")}
+          note="Chcecm oe nsdjfalsdn laskndlasd lkasjdadjnsasfk alksdlansd klnasf nlkaslkfn asdasi asidj dj asijdadspa"
+        />
+        <NoteRow
+          onDelete={() => console.log("Hello")}
+          note="Chcecm oe nsdjfalsdn laskndlasd lkasjdadjnsasfk alksdlansd klnasf nlkaslkfn asdasi asidj dj asijdadspa"
+        />
+        <NoteRow
+          onDelete={() => console.log("Hello")}
+          note="Chcecm oe nsdjfalsdn laskndlasd lkasjdadjnsasfk alksdlansd klnasf nlkaslkfn asdasi asidj dj asijdadspa"
+        />
+        <NoteRow onDelete={() => console.log("HH")} note="Zubar 8:00" />
       </View>
     </ScrollView>
   );

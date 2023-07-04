@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, SafeAreaView, View, Pressable } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import moment from "moment";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import CalendarArrow from "../components/CalendarArrow";
 import CalendarHeader from "../components/CalendarHeader";
 import SelectedDateView from "../components/SelectedDateView";
@@ -89,6 +89,7 @@ export default function HomeScreen() {
     workDays,
     saveWorkWeeks,
     deleteAll,
+    handleDaySelect,
   } = useCalendar();
 
   // TODO adjust this function here to make it selected and marked
@@ -117,7 +118,8 @@ export default function HomeScreen() {
 
       <Calendar
         onDayPress={(day) => {
-          return setSelectedDate(day.dateString);
+          console.log("Selecting day", day);
+          setSelectedDate(day.dateString);
         }}
         onDayLongPress={(day) => console.log("onDayLongPress", day)}
         onMonthChange={(date) => console.log("onMonthChange", date)}

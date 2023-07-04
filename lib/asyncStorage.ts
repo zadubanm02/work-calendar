@@ -95,30 +95,6 @@ export const resetWorkDays = async (firstMonth: string) => {
   }
 };
 
-export const saveNoteToDate = async (date: string, note: string) => {
-  try {
-    const existingData = await AsyncStorage.getItem(date);
-    if (existingData) {
-      const parsedOld = JSON.parse(existingData);
-      const newData = [...parsedOld, note];
-      await AsyncStorage.setItem(date, JSON.stringify(newData));
-    } else {
-      await AsyncStorage.setItem(date, JSON.parse(note));
-    }
-  } catch (error) {
-    throw new Error("Could not save note");
-  }
-};
-
-export const getNotesForDate = async (date: string) => {
-  try {
-    const data = await AsyncStorage.getItem(date);
-    data ? JSON.parse(data) : null;
-  } catch (error) {
-    throw new Error("Could not get notes");
-  }
-};
-
 const getMonths = (firstMonth: string): string[] => {
   let finalMonths: string[] = [];
   let year = parseInt(firstMonth.split("-")[0]);
@@ -218,4 +194,28 @@ const transform = (dates: string[]) => {
   });
 
   return newData;
+};
+
+export const saveNoteToDate = async (date: string, note: string) => {
+  try {
+    const existingData = await AsyncStorage.getItem(date);
+    if (existingData) {
+      const parsedOld = JSON.parse(existingData);
+      const newData = [...parsedOld, note];
+      await AsyncStorage.setItem(date, JSON.stringify(newData));
+    } else {
+      await AsyncStorage.setItem(date, JSON.parse(note));
+    }
+  } catch (error) {
+    throw new Error("Could not save note");
+  }
+};
+
+export const getNotesForDate = async (date: string) => {
+  try {
+    const data = await AsyncStorage.getItem(date);
+    data ? JSON.parse(data) : null;
+  } catch (error) {
+    throw new Error("Could not get notes");
+  }
 };

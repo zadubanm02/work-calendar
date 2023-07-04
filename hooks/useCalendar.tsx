@@ -46,6 +46,10 @@ export const useCalendar = () => {
     return date === selectedDate;
   };
 
+  const handleDaySelect = (date: string) => {
+    setSelectedDate(date);
+  };
+
   const saveWorkWeeks = async () => {
     const dates = calculateWorkDays(workWeek);
     const result = await storeWorkDates(dates);
@@ -69,5 +73,6 @@ export const useCalendar = () => {
     isSelected,
     saveWorkWeeks,
     deleteAll,
+    handleDaySelect,
   };
 };
