@@ -1,29 +1,35 @@
+import moment from "moment";
+
 export const mapDayString = (day: string) => {
-  const dayString = day.split(" ")[0];
+  const dateString = moment(day).format("dddd DD.MM.YYYY");
+  const dayArr = dateString.split(" ");
+  const dayString = dayArr[0];
+  const datePart = dayArr[1];
+  console.log("MapDayString", day, dayString, datePart);
   switch (dayString) {
     case "Monday": {
-      return `Pondelok ${day.split(" ")[1]}`;
+      return `Pondelok ${datePart}`;
     }
     case "Tuesday": {
-      return `Utorok ${day.split(" ")[1]}`;
+      return `Utorok ${datePart}`;
     }
     case "Wednesday": {
-      return `Streda ${day.split(" ")[1]}`;
+      return `Streda ${datePart}`;
     }
     case "Thursday": {
-      return `Štvrtok ${day.split(" ")[1]}`;
+      return `Štvrtok ${datePart}`;
     }
     case "Friday": {
-      return `Piatok ${day.split(" ")[1]}`;
+      return `Piatok ${datePart}`;
     }
     case "Saturday": {
-      return `Sobota ${day.split(" ")[1]}`;
+      return `Sobota ${datePart}`;
     }
     case "Sunday": {
-      return `Nedeľa ${day.split(" ")[1]}`;
+      return `Nedeľa ${datePart}`;
     }
     default: {
-      return `Deň ${day.split(" ")[1]}`;
+      return `Deň ${datePart}`;
     }
   }
 };

@@ -24,10 +24,8 @@ type Props = {
   date: string;
 };
 
-export default function SelectedDateView() {
-  const { selectedDate, setSelectedDate } = useCalendar();
+export default function SelectedDateView({ date }: Props) {
   const { selectedDayData } = useDay();
-  moment.locale("sk");
 
   const navigation = useNavigation();
   const route = useRoute<DayDetailScreenRouteProp>();
@@ -35,6 +33,10 @@ export default function SelectedDateView() {
   const params = route.params;
 
   const handleDelete = (note: string) => {};
+
+  useEffect(() => {
+    console.log("Some Date", date);
+  }, [date]);
 
   return (
     <ScrollView style={styles.container}>
@@ -49,13 +51,13 @@ export default function SelectedDateView() {
           }}
         >
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-            {mapDayString(selectedDate)}
+            {mapDayString(date)}
           </Text>
           <Pressable
             onPress={() =>
               navigation.navigate<StackNavigationProp>("DayDetail", {
                 screen: "DayDetail",
-                day: selectedDate,
+                day: date,
               })
             }
           >

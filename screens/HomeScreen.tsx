@@ -119,7 +119,7 @@ export default function HomeScreen() {
       <Calendar
         onDayPress={(day) => {
           console.log("Selecting day", day);
-          setSelectedDate(day.dateString);
+          handleDaySelect(day.dateString);
         }}
         onDayLongPress={(day) => console.log("onDayLongPress", day)}
         onMonthChange={(date) => console.log("onMonthChange", date)}
@@ -152,7 +152,7 @@ export default function HomeScreen() {
 
         // {...props}
       />
-      <SelectedDateView />
+      <SelectedDateView date={selectedDate} />
     </SafeAreaView>
   );
 }
