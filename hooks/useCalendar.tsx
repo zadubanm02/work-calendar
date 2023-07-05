@@ -35,10 +35,8 @@ export const useCalendar = () => {
     ],
   });
   moment.locale("sk");
-
-  const [selectedDate, setSelectedDate] = useState<string>(
-    moment().format("dddd DD.MM.YYYY")
-  );
+  const date = moment().format("dddd DD.MM.YYYY");
+  const [selectedDate, setSelectedDate] = useState<string>(date);
   const [workDays, setWorkDays] = useState<{}>({});
   const [workWeek, setWorkWeek] = useState<WorkWeek>(WorkWeek.Short);
 

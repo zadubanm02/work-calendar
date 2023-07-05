@@ -38,6 +38,10 @@ export default function SelectedDateView({ date }: Props) {
     console.log("Some Date", date);
   }, [date]);
 
+  if (date == undefined) {
+    return null;
+  }
+
   return (
     <ScrollView style={styles.container}>
       {params ? (
@@ -82,7 +86,9 @@ export default function SelectedDateView({ date }: Props) {
         <Text style={{ fontWeight: "bold", fontSize: 18 }}>Poznámky</Text>
         <Pressable style={styles.newNote}>
           <AntDesign name="plus" size={18} color="white" />
-          <Text style={{ color: "#fff", marginLeft: 2 }}>Nová poznámka</Text>
+          <Text style={{ color: "#fff", marginLeft: 2, fontWeight: "bold" }}>
+            Nová poznámka
+          </Text>
         </Pressable>
       </View>
       {/* Container for notes */}

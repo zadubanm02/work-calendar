@@ -159,15 +159,15 @@ export const calculateWorkDays = (_workWeek: WorkWeek) => {
     }
     for (weekDayCount; weekDayCount < 8; weekDayCount++) {
       if (workWeek === WorkWeek.Short) {
-        if (weekDayCount === 2 || weekDayCount === 3 || weekDayCount === 4) {
+        if (weekDayCount === 3 || weekDayCount === 4 || weekDayCount === 5) {
           dates.push(week.weekday(weekDayCount).format("yyyy-MM-DD"));
         }
       } else {
         if (
-          weekDayCount === 0 ||
           weekDayCount === 1 ||
-          weekDayCount === 5 ||
-          weekDayCount === 6
+          weekDayCount === 2 ||
+          weekDayCount === 6 ||
+          weekDayCount === 7
         ) {
           dates.push(week.weekday(weekDayCount).format("yyyy-MM-DD"));
         }

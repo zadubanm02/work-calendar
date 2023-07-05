@@ -75,7 +75,7 @@ export default function HomeScreen() {
       "piatok",
       "sobota",
     ],
-    dayNamesShort: ["Pon", "Ut", "Str", "Štv", "Pia", "So", "Ne"],
+    dayNamesShort: ["Ne", "Pon", "Ut", "Str", "Štv", "Pia", "So"],
     today: "Dnes",
   };
   LocaleConfig.defaultLocale = "sk";
@@ -149,6 +149,7 @@ export default function HomeScreen() {
         // marked days are work days
         markingType={"period"}
         markedDates={marked}
+        firstDay={1}
 
         // {...props}
       />
@@ -160,7 +161,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 30,
+    //marginTop: 30,
     backgroundColor: "#fff",
     // alignItems: "center",
     // justifyContent: "center",
