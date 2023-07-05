@@ -84,7 +84,12 @@ export default function SelectedDateView({ date }: Props) {
         }}
       >
         <Text style={{ fontWeight: "bold", fontSize: 18 }}>Poznámky</Text>
-        <Pressable style={styles.newNote}>
+        <Pressable
+          onPress={() => {
+            navigation.navigate("AddNote");
+          }}
+          style={styles.newNote}
+        >
           <AntDesign name="plus" size={18} color="white" />
           <Text style={{ color: "#fff", marginLeft: 2, fontWeight: "bold" }}>
             Nová poznámka
