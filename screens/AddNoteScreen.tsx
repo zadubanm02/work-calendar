@@ -6,7 +6,10 @@ import { AntDesign } from "@expo/vector-icons";
 export default function AddNoteScreen() {
   const navigation = useNavigation();
   const [text, onChangeText] = React.useState("");
-  const onClose = () => {};
+  const onClose = () => {
+    onChangeText("");
+    return navigation.goBack();
+  };
 
   const onSubmit = () => {
     // SAVE to DB
