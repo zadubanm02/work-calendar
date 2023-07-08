@@ -196,13 +196,23 @@ const transform = (dates: string[]) => {
   return newData;
 };
 
-export const saveNoteToDate = async (date: string, note: string) => {
+export type DayData = {
+  notes?: string[];
+  time?: string;
+};
+
+export const saveNoteToDay = async (date: string, note: string) => {
   try {
     const existingData = await AsyncStorage.getItem(date);
     if (existingData) {
-      const parsedOld = JSON.parse(existingData);
-      const newData = [...parsedOld, note];
-      await AsyncStorage.setItem(date, JSON.stringify(newData));
+      const parsedOld = JSON.parse(existingData) as DayData;
+      if (parsedOld.notes) {
+        const newNootes = parsedOld.notes.push(note);
+        const newDataObj = { ...parsedOld, notes: newNootes };
+        await AsyncStorage.setItem(date, JSON.stringify(newDataObj));
+      }
+      parsedOld.notes = [note];
+      await AsyncStorage.setItem(date, JSON.stringify(parsedOld));
     } else {
       await AsyncStorage.setItem(date, JSON.parse(note));
     }
@@ -211,10 +221,44 @@ export const saveNoteToDate = async (date: string, note: string) => {
   }
 };
 
-export const getNotesForDate = async (date: string) => {
+export const saveTimeToDay = async (date: string, time: string) => {
+  try {
+    const existingData = await AsyncStorage.getItem(date);
+    if (existingData) {
+      const parsedOld = JSON.parse(existingData) as DayData;
+      parsedOld.time = time;
+      await AsyncStorage.setItem(date, JSON.stringify(parsedOld));
+    } else {
+      const data: DayData = { time };
+      await AsyncStorage.setItem(date, JSON.stringify(data));
+    }
+  } catch (error) {
+    throw new Error("Could not save note");
+  }
+};
+
+export const deleteNoteForDay = async (date: string, note: string) => {
+  try {
+    const existingData = await AsyncStorage.getItem(date);
+    if (existingData) {
+      const parsedOld = JSON.parse(existingData) as DayData;
+      if (parsedOld.notes) {
+        const index = parsedOld.notes.indexOf(note, 0);
+        if (index > -1) {
+          parsedOld.notes.splice(index, 1);
+          await AsyncStorage.setItem(date, JSON.stringify(parsedOld));
+        }
+      }
+    }
+  } catch (error) {
+    throw new Error("Could not delete note");
+  }
+};
+
+export const getDataForDate = async (date: string): Promise<DayData> => {
   try {
     const data = await AsyncStorage.getItem(date);
-    data ? JSON.parse(data) : null;
+    return data ? JSON.parse(data) : null;
   } catch (error) {
     throw new Error("Could not get notes");
   }

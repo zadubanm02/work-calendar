@@ -21,7 +21,7 @@ type StackNavigationProp = NativeStackNavigationProp<
 >;
 
 type Props = {
-  date: string;
+  date?: string;
 };
 
 export default function SelectedDateView({ date }: Props) {
@@ -35,12 +35,16 @@ export default function SelectedDateView({ date }: Props) {
   const handleDelete = (note: string) => {};
 
   useEffect(() => {
-    console.log("Some Date", date);
+    console.log("Some Date", selectedDayData);
   }, [date]);
 
-  if (date == undefined) {
-    return null;
-  }
+  // if (date == undefined) {
+  //   return (
+  //     <View>
+  //       <Text>Something is undefined</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <ScrollView style={styles.container}>
@@ -71,9 +75,9 @@ export default function SelectedDateView({ date }: Props) {
       )}
       {isWorkDay && (
         <View style={styles.times}>
-          <TimeButton time="7:30" active={false} />
-          <TimeButton time="8:00" active={true} />
-          <TimeButton time="8:30" active={false} />
+          <TimeButton time="7:30" active={selectedDayData?.time === "7:30"} />
+          <TimeButton time="8:00" active={selectedDayData?.time === "8:00"} />
+          <TimeButton time="8:30" active={selectedDayData?.time === "8:30"} />
         </View>
       )}
       <View
@@ -98,7 +102,16 @@ export default function SelectedDateView({ date }: Props) {
       </View>
       {/* Container for notes */}
       <View>
-        <NoteRow onDelete={() => console.log("Hello")} note="Zubar 8:00" />
+        {selectedDayData?.notes?.map((note, index) => {
+          return (
+            <NoteRow
+              key={index}
+              onDelete={() => console.log(note)}
+              note={note}
+            />
+          );
+        })}
+        {/* <NoteRow onDelete={() => console.log("Hello")} note="Zubar 8:00" />
         <NoteRow
           onDelete={() => console.log("Hello")}
           note="Chcecm oe nsdjfalsdn laskndlasd lkasjdadjnsasfk alksdlansd klnasf nlkaslkfn asdasi asidj dj asijdadspa"
@@ -111,7 +124,7 @@ export default function SelectedDateView({ date }: Props) {
           onDelete={() => console.log("Hello")}
           note="Chcecm oe nsdjfalsdn laskndlasd lkasjdadjnsasfk alksdlansd klnasf nlkaslkfn asdasi asidj dj asijdadspa"
         />
-        <NoteRow onDelete={() => console.log("HH")} note="Zubar 8:00" />
+        <NoteRow onDelete={() => console.log("HH")} note="Zubar 8:00" /> */}
       </View>
     </ScrollView>
   );

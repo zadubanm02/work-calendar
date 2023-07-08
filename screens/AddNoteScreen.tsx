@@ -2,9 +2,11 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
+import { useDay } from "../hooks/useDay";
 
 export default function AddNoteScreen() {
   const navigation = useNavigation();
+  const { selectedDate, handleAddNote } = useDay();
   const [text, onChangeText] = React.useState("");
   const onClose = () => {
     onChangeText("");
@@ -12,10 +14,14 @@ export default function AddNoteScreen() {
   };
 
   const onSubmit = () => {
+    if (text.length < 1) {
+      return;
+    }
     // SAVE to DB
-
-    onChangeText("");
-    return navigation.goBack();
+    handleAddNote(selectedDate, text).then(() => {
+      onChangeText("");
+      return navigation.goBack();
+    });
   };
 
   return (
@@ -42,7 +48,7 @@ export default function AddNoteScreen() {
         multiline
         numberOfLines={15}
       />
-      <Pressable style={styles.addButton}>
+      <Pressable style={styles.addButton} onPress={onSubmit}>
         <Text style={styles.addText}>Pridať</Text>
       </Pressable>
     </View>
