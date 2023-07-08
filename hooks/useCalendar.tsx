@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import {
   WorkWeek,
   calculateWorkDays,
+  getDataForDate,
   getWorkDates,
   resetAllWorkDays,
   storeWorkDates,
 } from "../lib/asyncStorage";
 import moment from "moment";
+import { useAtom } from "jotai";
+import { dataAtom, selectedDayAtom } from "../state/calendar.state";
 
 export const useCalendar = () => {
   moment.updateLocale("sk", {
@@ -36,9 +39,11 @@ export const useCalendar = () => {
   });
   moment.locale("sk");
   const date = moment().format("dddd DD.MM.YYYY");
-  const [selectedDate, setSelectedDate] = useState<string>(date);
+  const [selectedDate, setSelectedDate] = useAtom(selectedDayAtom);
   const [workDays, setWorkDays] = useState<{}>({});
   const [workWeek, setWorkWeek] = useState<WorkWeek>(WorkWeek.Short);
+
+  const [data, setData] = useAtom(dataAtom);
 
   const isSelected = (date: string) => {
     return date === selectedDate;
@@ -46,6 +51,9 @@ export const useCalendar = () => {
 
   const handleDaySelect = (date: string) => {
     setSelectedDate(date);
+    getDataForDate(date).then((data) => {
+      setData(data);
+    });
   };
 
   const saveWorkWeeks = async () => {
@@ -59,6 +67,10 @@ export const useCalendar = () => {
     const data = await getWorkDates();
     setWorkDays(data);
   };
+
+  // useEffect(() => {
+  //   console.log()
+  // }, [selectedDate]);
 
   const deleteAll = async () => {
     await resetAllWorkDays();

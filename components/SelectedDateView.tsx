@@ -2,17 +2,16 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect } from "react";
 import TimeButton from "./TimeButton";
 import { AntDesign } from "@expo/vector-icons";
-import { useCalendar } from "../hooks/useCalendar";
-import moment from "moment";
 import "moment/min/moment-with-locales";
 import { Ionicons } from "@expo/vector-icons";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import TopNavigation from "./TopNavigation";
 import { RootStackParamList } from "../navigation";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useDay } from "../hooks/useDay";
 import NoteRow from "./NoteRow";
 import { mapDayString } from "../lib/utils";
+import { useAtom } from "jotai";
+import { dataAtom } from "../state/calendar.state";
 
 type DayDetailScreenRouteProp = RouteProp<RootStackParamList, "DayDetail">;
 type StackNavigationProp = NativeStackNavigationProp<
@@ -25,7 +24,7 @@ type Props = {
 };
 
 export default function SelectedDateView({ date }: Props) {
-  const { selectedDayData } = useDay();
+  const [data, setData] = useAtom(dataAtom);
 
   const navigation = useNavigation();
   const route = useRoute<DayDetailScreenRouteProp>();
@@ -33,18 +32,6 @@ export default function SelectedDateView({ date }: Props) {
   const params = route.params;
 
   const handleDelete = (note: string) => {};
-
-  useEffect(() => {
-    console.log("Some Date", selectedDayData);
-  }, [date]);
-
-  // if (date == undefined) {
-  //   return (
-  //     <View>
-  //       <Text>Something is undefined</Text>
-  //     </View>
-  //   );
-  // }
 
   return (
     <ScrollView style={styles.container}>
@@ -75,9 +62,9 @@ export default function SelectedDateView({ date }: Props) {
       )}
       {isWorkDay && (
         <View style={styles.times}>
-          <TimeButton time="7:30" active={selectedDayData?.time === "7:30"} />
-          <TimeButton time="8:00" active={selectedDayData?.time === "8:00"} />
-          <TimeButton time="8:30" active={selectedDayData?.time === "8:30"} />
+          <TimeButton time="7:30" active={data?.time === "7:30"} />
+          <TimeButton time="8:00" active={data?.time === "8:00"} />
+          <TimeButton time="8:30" active={data?.time === "8:30"} />
         </View>
       )}
       <View
@@ -102,7 +89,7 @@ export default function SelectedDateView({ date }: Props) {
       </View>
       {/* Container for notes */}
       <View>
-        {selectedDayData?.notes?.map((note, index) => {
+        {data?.notes?.map((note, index) => {
           return (
             <NoteRow
               key={index}
@@ -111,20 +98,6 @@ export default function SelectedDateView({ date }: Props) {
             />
           );
         })}
-        {/* <NoteRow onDelete={() => console.log("Hello")} note="Zubar 8:00" />
-        <NoteRow
-          onDelete={() => console.log("Hello")}
-          note="Chcecm oe nsdjfalsdn laskndlasd lkasjdadjnsasfk alksdlansd klnasf nlkaslkfn asdasi asidj dj asijdadspa"
-        />
-        <NoteRow
-          onDelete={() => console.log("Hello")}
-          note="Chcecm oe nsdjfalsdn laskndlasd lkasjdadjnsasfk alksdlansd klnasf nlkaslkfn asdasi asidj dj asijdadspa"
-        />
-        <NoteRow
-          onDelete={() => console.log("Hello")}
-          note="Chcecm oe nsdjfalsdn laskndlasd lkasjdadjnsasfk alksdlansd klnasf nlkaslkfn asdasi asidj dj asijdadspa"
-        />
-        <NoteRow onDelete={() => console.log("HH")} note="Zubar 8:00" /> */}
       </View>
     </ScrollView>
   );

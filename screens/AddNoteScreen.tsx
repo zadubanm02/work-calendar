@@ -18,7 +18,7 @@ export default function AddNoteScreen() {
       return;
     }
     // SAVE to DB
-    handleAddNote(selectedDate, text).then(() => {
+    handleAddNote(selectedDate as string, text).then(() => {
       onChangeText("");
       return navigation.goBack();
     });

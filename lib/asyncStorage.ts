@@ -207,9 +207,11 @@ export const saveNoteToDay = async (date: string, note: string) => {
     if (existingData) {
       const parsedOld = JSON.parse(existingData) as DayData;
       if (parsedOld.notes) {
-        const newNootes = parsedOld.notes.push(note);
+        const newNootes = parsedOld.notes;
+        newNootes.push(note);
+        console.log("Poznamocky zas", newNootes);
         const newDataObj = { ...parsedOld, notes: newNootes };
-        await AsyncStorage.setItem(date, JSON.stringify(newDataObj));
+        return await AsyncStorage.setItem(date, JSON.stringify(newDataObj));
       }
       parsedOld.notes = [note];
       await AsyncStorage.setItem(date, JSON.stringify(parsedOld));

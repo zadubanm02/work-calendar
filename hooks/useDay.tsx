@@ -6,34 +6,35 @@ import {
   saveTimeToDay,
 } from "../lib/asyncStorage";
 import { useCalendar } from "./useCalendar";
+import { useAtom, useAtomValue } from "jotai";
+import { dataAtom, selectedDayAtom } from "../state/calendar.state";
 
 export const useDay = () => {
-  const { selectedDate } = useCalendar();
-  const [selectedDayData, setSelectedDayData] = useState<DayData | null>(null);
+  const [data, setData] = useAtom(dataAtom);
+  const selectedDate = useAtomValue(selectedDayAtom);
   useEffect(() => {
-    getDataForDate(selectedDate).then((data) => {
-      setSelectedDayData(data);
+    getDataForDate(selectedDate as string).then((data) => {
+      setData(data);
     });
   }, []);
 
   const handleAddNote = async (date: string, note: string) => {
     await saveNoteToDay(date, note);
-    return getDataForDate(selectedDate).then((data) => {
-      setSelectedDayData(data);
+    return getDataForDate(selectedDate as string).then((data) => {
+      setData(data);
     });
   };
 
   const handleTimeChange = (date: string, time: string) => {
-    console.log("USEDAY", date, time);
     return saveTimeToDay(date, time).then(() => {
-      getDataForDate(selectedDate).then((data) => {
-        setSelectedDayData(data);
+      getDataForDate(selectedDate as string).then((data) => {
+        setData(data);
       });
     });
   };
 
   return {
-    selectedDayData,
+    data,
     selectedDate,
     handleAddNote,
     handleTimeChange,

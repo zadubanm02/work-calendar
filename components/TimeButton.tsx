@@ -1,6 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useDay } from "../hooks/useDay";
+import { useAtomValue } from "jotai";
+import { selectedDayAtom } from "../state/calendar.state";
 
 type Props = {
   time: string;
@@ -8,10 +10,11 @@ type Props = {
 };
 
 export default function TimeButton({ active, time }: Props) {
-  const { handleTimeChange, selectedDate } = useDay();
+  const { handleTimeChange } = useDay();
+  const selectedDate = useAtomValue(selectedDayAtom);
   return (
     <Pressable
-      onPress={() => handleTimeChange(selectedDate, time)}
+      onPress={() => handleTimeChange(selectedDate as string, time)}
       style={[
         styles.container,
         { backgroundColor: active ? "#000" : "rgb(226 232 240)" },
