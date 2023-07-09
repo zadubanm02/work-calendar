@@ -12,6 +12,8 @@ import NoteRow from "./NoteRow";
 import { mapDayString } from "../lib/utils";
 import { useAtom } from "jotai";
 import { dataAtom } from "../state/calendar.state";
+import { deleteNoteForDay } from "../lib/asyncStorage";
+import { useCalendar } from "../hooks/useCalendar";
 
 type DayDetailScreenRouteProp = RouteProp<RootStackParamList, "DayDetail">;
 type StackNavigationProp = NativeStackNavigationProp<
@@ -25,13 +27,12 @@ type Props = {
 
 export default function SelectedDateView({ date }: Props) {
   const [data, setData] = useAtom(dataAtom);
+  const { handleDelete } = useCalendar();
 
   const navigation = useNavigation();
   const route = useRoute<DayDetailScreenRouteProp>();
   const isWorkDay = true;
   const params = route.params;
-
-  const handleDelete = (note: string) => {};
 
   return (
     <ScrollView style={styles.container}>
@@ -93,7 +94,7 @@ export default function SelectedDateView({ date }: Props) {
           return (
             <NoteRow
               key={index}
-              onDelete={() => console.log(note)}
+              onDelete={() => handleDelete(note)}
               note={note}
             />
           );

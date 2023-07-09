@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   WorkWeek,
   calculateWorkDays,
+  deleteNoteForDay,
   getDataForDate,
   getWorkDates,
   resetAllWorkDays,
@@ -63,6 +64,15 @@ export const useCalendar = () => {
     setWorkDays(result);
   };
 
+  const handleDelete = (note: string) => {
+    console.log("Deleting Note", note);
+    deleteNoteForDay(selectedDate as string, note).then(() => {
+      getDataForDate(selectedDate as string).then((data) => {
+        setData(data);
+      });
+    });
+  };
+
   const loadWorkDays = async () => {
     const data = await getWorkDates();
     setWorkDays(data);
@@ -84,5 +94,6 @@ export const useCalendar = () => {
     saveWorkWeeks,
     deleteAll,
     handleDaySelect,
+    handleDelete,
   };
 };

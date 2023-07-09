@@ -248,7 +248,7 @@ export const deleteNoteForDay = async (date: string, note: string) => {
         const index = parsedOld.notes.indexOf(note, 0);
         if (index > -1) {
           parsedOld.notes.splice(index, 1);
-          await AsyncStorage.setItem(date, JSON.stringify(parsedOld));
+          return await AsyncStorage.setItem(date, JSON.stringify(parsedOld));
         }
       }
     }
