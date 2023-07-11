@@ -29,5 +29,7 @@ const styles = StyleSheet.create({
   textStyle: {
     fontSize: 18,
     fontWeight: "600",
+    flex: 1,
+    flexWrap: "wrap",
   },
 });
