@@ -7,6 +7,7 @@ import CalendarArrow from "../components/CalendarArrow";
 import CalendarHeader from "../components/CalendarHeader";
 import SelectedDateView from "../components/SelectedDateView";
 import { useCalendar } from "../hooks/useCalendar";
+import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
   // locales
@@ -82,6 +83,8 @@ export default function HomeScreen() {
 
   // hooks
 
+  const navigation = useNavigation();
+
   const {
     selectedDate,
     setSelectedDate,
@@ -111,7 +114,10 @@ export default function HomeScreen() {
       <StatusBar style="auto" />
       <View style={styles.header}>
         <Text style={styles.headerText}>Pracovný kalendár</Text>
-        <Pressable onPress={() => saveWorkWeeks()} style={styles.editButton}>
+        <Pressable
+          onPress={() => navigation.navigate("FillWeeks")}
+          style={styles.editButton}
+        >
           <Text style={{ fontWeight: "bold", color: "#fff" }}>Upraviť</Text>
         </Pressable>
       </View>
@@ -167,6 +173,7 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
   },
   header: {
+    marginTop: 30,
     paddingHorizontal: 10,
     paddingVertical: 10,
     marginHorizontal: 10,

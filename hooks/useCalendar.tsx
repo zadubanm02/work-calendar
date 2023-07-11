@@ -10,7 +10,11 @@ import {
 } from "../lib/asyncStorage";
 import moment from "moment";
 import { useAtom } from "jotai";
-import { dataAtom, selectedDayAtom } from "../state/calendar.state";
+import {
+  dataAtom,
+  selectedDayAtom,
+  workDaysAtom,
+} from "../state/calendar.state";
 
 export const useCalendar = () => {
   moment.updateLocale("sk", {
@@ -39,9 +43,9 @@ export const useCalendar = () => {
     ],
   });
   moment.locale("sk");
-  const date = moment().format("dddd DD.MM.YYYY");
   const [selectedDate, setSelectedDate] = useAtom(selectedDayAtom);
-  const [workDays, setWorkDays] = useState<{}>({});
+  const [workDays, setWorkDays] = useAtom(workDaysAtom);
+  //const [workDays, setWorkDays] = useState<{}>({});
   const [workWeek, setWorkWeek] = useState<WorkWeek>(WorkWeek.Short);
 
   const [data, setData] = useAtom(dataAtom);
@@ -57,11 +61,12 @@ export const useCalendar = () => {
     });
   };
 
-  const saveWorkWeeks = async () => {
+  const saveWorkWeeks = (workWeek: WorkWeek) => {
     const dates = calculateWorkDays(workWeek);
-    const result = await storeWorkDates(dates);
-
-    setWorkDays(result);
+    return storeWorkDates(dates).then((data) => {
+      console.log("DATA", data);
+      return setWorkDays(data);
+    });
   };
 
   const handleDelete = (note: string) => {
@@ -82,8 +87,10 @@ export const useCalendar = () => {
   //   console.log()
   // }, [selectedDate]);
 
-  const deleteAll = async () => {
-    await resetAllWorkDays();
+  const deleteAll = () => {
+    return resetAllWorkDays().then(() => {
+      setWorkDays({});
+    });
   };
 
   return {

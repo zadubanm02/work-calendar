@@ -202,11 +202,15 @@ export type DayData = {
 };
 
 export const saveNoteToDay = async (date: string, note: string) => {
+  console.log("SAVENOTEDAT", date);
   try {
     const existingData = await AsyncStorage.getItem(date);
+    console.log("Existing data", existingData);
     if (existingData) {
       const parsedOld = JSON.parse(existingData) as DayData;
+      console.log("PRADSEWDA", parsedOld.notes);
       if (parsedOld.notes) {
+        console.log("IM HERE", parsedOld.notes);
         const newNootes = parsedOld.notes;
         newNootes.push(note);
         console.log("Poznamocky zas", newNootes);
@@ -216,7 +220,8 @@ export const saveNoteToDay = async (date: string, note: string) => {
       parsedOld.notes = [note];
       await AsyncStorage.setItem(date, JSON.stringify(parsedOld));
     } else {
-      await AsyncStorage.setItem(date, JSON.parse(note));
+      const newDayData: DayData = { notes: [note] };
+      await AsyncStorage.setItem(date, JSON.stringify(newDayData));
     }
   } catch (error) {
     throw new Error("Could not save note");
