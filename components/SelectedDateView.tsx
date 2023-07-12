@@ -1,5 +1,5 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import TimeButton from "./TimeButton";
 import { AntDesign } from "@expo/vector-icons";
 import "moment/min/moment-with-locales";
@@ -12,7 +12,6 @@ import NoteRow from "./NoteRow";
 import { mapDayString } from "../lib/utils";
 import { useAtom } from "jotai";
 import { dataAtom } from "../state/calendar.state";
-import { deleteNoteForDay } from "../lib/asyncStorage";
 import { useCalendar } from "../hooks/useCalendar";
 
 type DayDetailScreenRouteProp = RouteProp<RootStackParamList, "DayDetail">;
@@ -47,7 +46,7 @@ export default function SelectedDateView({ date }: Props) {
           }}
         >
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-            {mapDayString(date)}
+            {mapDayString(date as string)}
           </Text>
           <Pressable
             onPress={() =>

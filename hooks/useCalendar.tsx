@@ -45,8 +45,6 @@ export const useCalendar = () => {
   moment.locale("sk");
   const [selectedDate, setSelectedDate] = useAtom(selectedDayAtom);
   const [workDays, setWorkDays] = useAtom(workDaysAtom);
-  //const [workDays, setWorkDays] = useState<{}>({});
-  const [workWeek, setWorkWeek] = useState<WorkWeek>(WorkWeek.Short);
 
   const [data, setData] = useAtom(dataAtom);
 
@@ -64,13 +62,11 @@ export const useCalendar = () => {
   const saveWorkWeeks = (workWeek: WorkWeek) => {
     const dates = calculateWorkDays(workWeek);
     return storeWorkDates(dates).then((data) => {
-      console.log("DATA", data);
       return setWorkDays(data);
     });
   };
 
   const handleDelete = (note: string) => {
-    console.log("Deleting Note", note);
     deleteNoteForDay(selectedDate as string, note).then(() => {
       getDataForDate(selectedDate as string).then((data) => {
         setData(data);
@@ -82,10 +78,6 @@ export const useCalendar = () => {
     const data = await getWorkDates();
     setWorkDays(data);
   };
-
-  // useEffect(() => {
-  //   console.log()
-  // }, [selectedDate]);
 
   const deleteAll = () => {
     return resetAllWorkDays().then(() => {

@@ -1,36 +1,12 @@
 {
   "expo": {
-    "name": "Janka",
-    "slug": "Janka",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.zadubanm.Janka"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
     "extra": {
       "eas": {
-        "projectId": "4caf5c6d-88a7-4d71-82d6-a8dbdb8eaa2f"
+        "projectId": "3d502f4c-5504-494c-81a0-706a0f69ef8b"
       }
+    },
+    "android": {
+      "package": "com.zadubanm.janka"
     }
   }
 }

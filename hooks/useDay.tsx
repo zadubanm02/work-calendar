@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   DayData,
   getDataForDate,
   saveNoteToDay,
   saveTimeToDay,
 } from "../lib/asyncStorage";
-import { useCalendar } from "./useCalendar";
 import { useAtom, useAtomValue } from "jotai";
 import { dataAtom, selectedDayAtom } from "../state/calendar.state";
 

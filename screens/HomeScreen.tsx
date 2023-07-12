@@ -159,7 +159,7 @@ export default function HomeScreen() {
 
         // {...props}
       />
-      <SelectedDateView date={selectedDate} />
+      <SelectedDateView date={selectedDate as string} />
     </SafeAreaView>
   );
 }
