@@ -11,32 +11,31 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
   // locales
-  moment.updateLocale("sk", {
-    months: [
-      "Január",
-      "Február",
-      "Marec",
-      "Apríl",
-      "Máj",
-      "Jún",
-      "Júl",
-      "August",
-      "September",
-      "Október",
-      "November",
-      "December",
-    ],
-    days: [
-      "Pondelok",
-      "Utorok",
-      "Streda",
-      "Štrvtok",
-      "Piatok",
-      "Sobota",
-      "Nedeľa",
-    ],
-  });
-  moment.locale("sk");
+  // moment.updateLocale("sk", {
+  //   months: [
+  //     "Január",
+  //     "Február",
+  //     "Marec",
+  //     "Apríl",
+  //     "Máj",
+  //     "Jún",
+  //     "Júl",
+  //     "August",
+  //     "September",
+  //     "Október",
+  //     "November",
+  //     "December",
+  //   ],
+  //   days: [
+  //     "Pondelok",
+  //     "Utorok",
+  //     "Streda",
+  //     "Štrvtok",
+  //     "Piatok",
+  //     "Sobota",
+  //     "Nedeľa",
+  //   ],
+  // });
 
   LocaleConfig.locales.sk = {
     monthNames: [

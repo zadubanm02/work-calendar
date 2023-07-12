@@ -2,7 +2,6 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import TimeButton from "./TimeButton";
 import { AntDesign } from "@expo/vector-icons";
-import "moment/min/moment-with-locales";
 import { Ionicons } from "@expo/vector-icons";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import TopNavigation from "./TopNavigation";

@@ -8,7 +8,7 @@ import {
   resetAllWorkDays,
   storeWorkDates,
 } from "../lib/asyncStorage";
-import moment from "moment";
+//import moment from "moment";
 import { useAtom } from "jotai";
 import {
   dataAtom,
@@ -17,32 +17,32 @@ import {
 } from "../state/calendar.state";
 
 export const useCalendar = () => {
-  moment.updateLocale("sk", {
-    months: [
-      "Január",
-      "Február",
-      "Marec",
-      "Apríl",
-      "Máj",
-      "Jún",
-      "Júl",
-      "August",
-      "September",
-      "Október",
-      "November",
-      "December",
-    ],
-    days: [
-      "Pondelok",
-      "Utorok",
-      "Streda",
-      "Štrvtok",
-      "Piatok",
-      "Sobota",
-      "Nedeľa",
-    ],
-  });
-  moment.locale("sk");
+  // moment.updateLocale("sk", {
+  //   months: [
+  //     "Január",
+  //     "Február",
+  //     "Marec",
+  //     "Apríl",
+  //     "Máj",
+  //     "Jún",
+  //     "Júl",
+  //     "August",
+  //     "September",
+  //     "Október",
+  //     "November",
+  //     "December",
+  //   ],
+  //   days: [
+  //     "Pondelok",
+  //     "Utorok",
+  //     "Streda",
+  //     "Štrvtok",
+  //     "Piatok",
+  //     "Sobota",
+  //     "Nedeľa",
+  //   ],
+  // });
+  // moment.locale("sk");
   const [selectedDate, setSelectedDate] = useAtom(selectedDayAtom);
   const [workDays, setWorkDays] = useAtom(workDaysAtom);
 

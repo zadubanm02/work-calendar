@@ -123,22 +123,22 @@ export enum WorkWeek {
 */
 
 export const calculateWorkDays = (_workWeek: WorkWeek) => {
-  moment.updateLocale("sk", {
-    months: [
-      "Január",
-      "Február",
-      "Marec",
-      "Apríl",
-      "Máj",
-      "Jún",
-      "Júl",
-      "August",
-      "September",
-      "Október",
-      "November",
-      "December",
-    ],
-  });
+  // moment.updateLocale("sk", {
+  //   months: [
+  //     "Január",
+  //     "Február",
+  //     "Marec",
+  //     "Apríl",
+  //     "Máj",
+  //     "Jún",
+  //     "Júl",
+  //     "August",
+  //     "September",
+  //     "Október",
+  //     "November",
+  //     "December",
+  //   ],
+  // });
   const dates: string[] = [];
   // today and monday of todays week
   const now = moment();
