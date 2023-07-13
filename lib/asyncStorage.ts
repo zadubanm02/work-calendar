@@ -60,6 +60,7 @@ export const getWorkDatesForMonth = async (month: string) => {
 
 export const storeWorkDates = async (dates: string[]) => {
   try {
+    await AsyncStorage.removeItem("workDays");
     const datesData = JSON.stringify(dates);
     await AsyncStorage.setItem("workDays", datesData);
     return transform(dates);
@@ -71,8 +72,11 @@ export const storeWorkDates = async (dates: string[]) => {
 export const getWorkDates = async (): Promise<{}> => {
   try {
     const data = await AsyncStorage.getItem("workDays");
+    console.log("CALLING FROM ASYNC STORAGE", transform(JSON.parse(data)));
+
     return data ? transform(JSON.parse(data)) : [];
   } catch (error) {
+    console.log("ERRRRR", error);
     throw new Error("Could not get dates");
   }
 };
@@ -123,36 +127,14 @@ export enum WorkWeek {
 */
 
 export const calculateWorkDays = (_workWeek: WorkWeek) => {
-  // moment.updateLocale("sk", {
-  //   months: [
-  //     "Január",
-  //     "Február",
-  //     "Marec",
-  //     "Apríl",
-  //     "Máj",
-  //     "Jún",
-  //     "Júl",
-  //     "August",
-  //     "September",
-  //     "Október",
-  //     "November",
-  //     "December",
-  //   ],
-  // });
   const dates: string[] = [];
-  // today and monday of todays week
   const now = moment();
   const firstMonday = now.clone().startOf("week");
-  // format("yyyy-MM-DD")
-  // counters
-  // count days from 1 (monday) to 7 (sunday) then back to 1
+
   let weekDayCount = 1;
-  // count work week workWeek.short % 2 = 1 ? short : long only increment
   let weekCount = 0;
   let workWeek = _workWeek;
   let week = firstMonday;
-
-  // loop for 57 weeks from
   for (weekCount; weekCount < 57; weekCount++) {
     if (weekCount > 0) {
       week.add(weekCount, "week");
@@ -180,13 +162,16 @@ export const calculateWorkDays = (_workWeek: WorkWeek) => {
       workWeek = WorkWeek.Short;
     }
     week = moment().startOf("week");
-    console.log("PRVY DEN V TYZDNi", week.weekday(0).format("yyyy-MM-DD"));
   }
-
+  console.log("RETURNING DATES", dates);
   return dates;
 };
 
 const transform = (dates: string[]) => {
+  console.log("DATES???", dates);
+  if (dates.length === 1) {
+    console.log("Dont have values");
+  }
   let newData = {};
   // '2012-05-22': {color: '#70d7c7', textColor: 'white'},
   dates.forEach((day) => {

@@ -10,13 +10,15 @@ export default function FillWeeksScreen() {
   const navigation = useNavigation();
 
   const handleWorkWeek = (workWeek: WorkWeek) => {
-    return saveWorkWeeks(workWeek).then(() => {
-      return navigation.goBack();
-    });
+    saveWorkWeeks(workWeek)
+      .then(() => {
+        return navigation.goBack();
+      })
+      .catch((error) => console.log("Error", error));
   };
 
   const handleDeleteAll = () => {
-    return deleteAll().then(() => {
+    deleteAll().then(() => {
       return navigation.goBack();
     });
   };

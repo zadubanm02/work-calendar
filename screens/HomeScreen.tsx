@@ -8,6 +8,7 @@ import CalendarHeader from "../components/CalendarHeader";
 import SelectedDateView from "../components/SelectedDateView";
 import { useCalendar } from "../hooks/useCalendar";
 import { useNavigation } from "@react-navigation/native";
+import { getSlovakMonth } from "../lib/utils";
 
 export default function HomeScreen() {
   // locales
@@ -105,6 +106,7 @@ export default function HomeScreen() {
       color: "#000",
       textColor: "#fff",
     };
+    console.log("DATES", dates);
     return dates;
   }, [selectedDate, workDays]);
 
@@ -141,7 +143,7 @@ export default function HomeScreen() {
           const endIndex = dateStr.indexOf("T");
           const title = moment(dateStr.slice(0, endIndex)).format("MMMM YYYY");
 
-          return <CalendarHeader headerText={title} />;
+          return <CalendarHeader headerText={getSlovakMonth(title)} />;
         }}
         theme={{
           textDayFontSize: 20,
