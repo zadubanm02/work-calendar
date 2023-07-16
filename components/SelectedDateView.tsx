@@ -61,9 +61,9 @@ export default function SelectedDateView({ date }: Props) {
       )}
       {isWorkDay && (
         <View style={styles.times}>
+          <TimeButton time="7:00" active={data?.time === "7:00"} />
           <TimeButton time="7:30" active={data?.time === "7:30"} />
           <TimeButton time="8:00" active={data?.time === "8:00"} />
-          <TimeButton time="8:30" active={data?.time === "8:30"} />
         </View>
       )}
       <View
