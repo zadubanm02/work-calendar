@@ -2,40 +2,41 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, SafeAreaView, View, Pressable } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import moment from "moment";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import CalendarArrow from "../components/CalendarArrow";
 import CalendarHeader from "../components/CalendarHeader";
 import SelectedDateView from "../components/SelectedDateView";
 import { useCalendar } from "../hooks/useCalendar";
+import { useNavigation } from "@react-navigation/native";
+import { getSlovakMonth } from "../lib/utils";
 
 export default function HomeScreen() {
   // locales
-  moment.updateLocale("sk", {
-    months: [
-      "Január",
-      "Február",
-      "Marec",
-      "Apríl",
-      "Máj",
-      "Jún",
-      "Júl",
-      "August",
-      "September",
-      "Október",
-      "November",
-      "December",
-    ],
-    days: [
-      "Pondelok",
-      "Utorok",
-      "Streda",
-      "Štrvtok",
-      "Piatok",
-      "Sobota",
-      "Nedeľa",
-    ],
-  });
-  moment.locale("sk");
+  // moment.updateLocale("sk", {
+  //   months: [
+  //     "Január",
+  //     "Február",
+  //     "Marec",
+  //     "Apríl",
+  //     "Máj",
+  //     "Jún",
+  //     "Júl",
+  //     "August",
+  //     "September",
+  //     "Október",
+  //     "November",
+  //     "December",
+  //   ],
+  //   days: [
+  //     "Pondelok",
+  //     "Utorok",
+  //     "Streda",
+  //     "Štrvtok",
+  //     "Piatok",
+  //     "Sobota",
+  //     "Nedeľa",
+  //   ],
+  // });
 
   LocaleConfig.locales.sk = {
     monthNames: [
@@ -75,12 +76,14 @@ export default function HomeScreen() {
       "piatok",
       "sobota",
     ],
-    dayNamesShort: ["Pon", "Ut", "Str", "Štv", "Pia", "So", "Ne"],
+    dayNamesShort: ["Ne", "Pon", "Ut", "Str", "Štv", "Pia", "So"],
     today: "Dnes",
   };
   LocaleConfig.defaultLocale = "sk";
 
   // hooks
+
+  const navigation = useNavigation();
 
   const {
     selectedDate,
@@ -89,47 +92,47 @@ export default function HomeScreen() {
     workDays,
     saveWorkWeeks,
     deleteAll,
+    handleDaySelect,
   } = useCalendar();
 
-  const today = new Date().toDateString();
-  const marked = useMemo(
-    () => ({
-      [selectedDate as string]: {
-        selected: true,
-        selectedColor: "#222222",
-        selectedTextColor: "yellow",
-      },
-    }),
-    [selectedDate]
-  );
+  // TODO adjust this function here to make it selected and marked
+  const marked = useMemo(() => {
+    const dates = {
+      ...workDays,
+    };
+    dates[selectedDate] = {
+      ...dates[selectedDate],
+      selected: true,
+      color: "#000",
+      textColor: "#fff",
+    };
+    return dates;
+  }, [selectedDate, workDays]);
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
       <View style={styles.header}>
         <Text style={styles.headerText}>Pracovný kalendár</Text>
-        <Pressable onPress={() => saveWorkWeeks()} style={styles.editButton}>
+        <Pressable
+          onPress={() => navigation.navigate("FillWeeks")}
+          style={styles.editButton}
+        >
           <Text style={{ fontWeight: "bold", color: "#fff" }}>Upraviť</Text>
         </Pressable>
       </View>
 
       <Calendar
         onDayPress={(day) => {
-          console.log("DAY", day);
-          const now = moment();
-          const monday = now.clone().weekday(1);
-          console.log("Monday", monday.format("yyyy-MM-DD"));
-
-          setSelectedDate(day.dateString);
+          console.log("Selecting day", day);
+          handleDaySelect(day.dateString);
         }}
         onDayLongPress={(day) => console.log("onDayLongPress", day)}
         onMonthChange={(date) => console.log("onMonthChange", date)}
         onPressArrowLeft={(goToPreviousMonth) => {
-          console.log("onPressArrowLeft");
           goToPreviousMonth();
         }}
         onPressArrowRight={(goToNextMonth) => {
-          console.log("onPressArrowRight");
           goToNextMonth();
         }}
         // custom rendered components
@@ -139,20 +142,25 @@ export default function HomeScreen() {
           const endIndex = dateStr.indexOf("T");
           const title = moment(dateStr.slice(0, endIndex)).format("MMMM YYYY");
 
-          return <CalendarHeader headerText={title} />;
+          return <CalendarHeader headerText={getSlovakMonth(title)} />;
         }}
         theme={{
           textDayFontSize: 20,
           textDayFontWeight: "bold",
           textMonthFontWeight: "bold",
+          selectedDayBackgroundColor: "#000",
+          selectedDayTextColor: "#fff",
+          todayTextColor: "#fff",
+          todayBackgroundColor: "#C40075",
         }}
         // marked days are work days
         markingType={"period"}
-        markedDates={workDays}
+        markedDates={marked}
+        firstDay={1}
 
         // {...props}
       />
-      <SelectedDateView />
+      <SelectedDateView date={selectedDate as string} />
     </SafeAreaView>
   );
 }
@@ -160,12 +168,13 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 30,
+    //marginTop: 30,
     backgroundColor: "#fff",
     // alignItems: "center",
     // justifyContent: "center",
   },
   header: {
+    marginTop: 30,
     paddingHorizontal: 10,
     paddingVertical: 10,
     marginHorizontal: 10,

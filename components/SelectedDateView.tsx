@@ -2,14 +2,16 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import TimeButton from "./TimeButton";
 import { AntDesign } from "@expo/vector-icons";
-import { useCalendar } from "../hooks/useCalendar";
-import moment from "moment";
-import "moment/min/moment-with-locales";
 import { Ionicons } from "@expo/vector-icons";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import TopNavigation from "./TopNavigation";
 import { RootStackParamList } from "../navigation";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import NoteRow from "./NoteRow";
+import { mapDayString } from "../lib/utils";
+import { useAtom } from "jotai";
+import { dataAtom } from "../state/calendar.state";
+import { useCalendar } from "../hooks/useCalendar";
 
 type DayDetailScreenRouteProp = RouteProp<RootStackParamList, "DayDetail">;
 type StackNavigationProp = NativeStackNavigationProp<
@@ -17,14 +19,19 @@ type StackNavigationProp = NativeStackNavigationProp<
   "DayDetail"
 >;
 
-export default function SelectedDateView() {
-  moment.locale("sk");
+type Props = {
+  date?: string;
+};
 
-  const { selectedDate } = useCalendar();
+export default function SelectedDateView({ date }: Props) {
+  const [data, setData] = useAtom(dataAtom);
+  const { handleDelete } = useCalendar();
+
   const navigation = useNavigation();
   const route = useRoute<DayDetailScreenRouteProp>();
   const isWorkDay = true;
   const params = route.params;
+
   return (
     <ScrollView style={styles.container}>
       {params ? (
@@ -38,13 +45,13 @@ export default function SelectedDateView() {
           }}
         >
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-            {selectedDate}
+            {mapDayString(date as string)}
           </Text>
           <Pressable
             onPress={() =>
               navigation.navigate<StackNavigationProp>("DayDetail", {
                 screen: "DayDetail",
-                day: selectedDate,
+                day: date,
               })
             }
           >
@@ -54,9 +61,9 @@ export default function SelectedDateView() {
       )}
       {isWorkDay && (
         <View style={styles.times}>
-          <TimeButton time="7:30" active={false} />
-          <TimeButton time="8:00" active={true} />
-          <TimeButton time="8:30" active={false} />
+          <TimeButton time="7:00" active={data?.time === "7:00"} />
+          <TimeButton time="7:30" active={data?.time === "7:30"} />
+          <TimeButton time="8:00" active={data?.time === "8:00"} />
         </View>
       )}
       <View
@@ -67,10 +74,29 @@ export default function SelectedDateView() {
         }}
       >
         <Text style={{ fontWeight: "bold", fontSize: 18 }}>Poznámky</Text>
-        <Pressable style={styles.newNote}>
+        <Pressable
+          onPress={() => {
+            navigation.navigate("AddNote");
+          }}
+          style={styles.newNote}
+        >
           <AntDesign name="plus" size={18} color="white" />
-          <Text style={{ color: "#fff", marginLeft: 2 }}>Nová poznámka</Text>
+          <Text style={{ color: "#fff", marginLeft: 2, fontWeight: "bold" }}>
+            Nová poznámka
+          </Text>
         </Pressable>
+      </View>
+      {/* Container for notes */}
+      <View>
+        {data?.notes?.map((note, index) => {
+          return (
+            <NoteRow
+              key={index}
+              onDelete={() => handleDelete(note)}
+              note={note}
+            />
+          );
+        })}
       </View>
     </ScrollView>
   );

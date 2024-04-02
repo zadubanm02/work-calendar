@@ -60,6 +60,7 @@ export const getWorkDatesForMonth = async (month: string) => {
 
 export const storeWorkDates = async (dates: string[]) => {
   try {
+    await AsyncStorage.removeItem("workDays");
     const datesData = JSON.stringify(dates);
     await AsyncStorage.setItem("workDays", datesData);
     return transform(dates);
@@ -71,8 +72,11 @@ export const storeWorkDates = async (dates: string[]) => {
 export const getWorkDates = async (): Promise<{}> => {
   try {
     const data = await AsyncStorage.getItem("workDays");
+    console.log("CALLING FROM ASYNC STORAGE", transform(JSON.parse(data)));
+
     return data ? transform(JSON.parse(data)) : [];
   } catch (error) {
+    console.log("ERRRRR", error);
     throw new Error("Could not get dates");
   }
 };
@@ -92,30 +96,6 @@ export const resetWorkDays = async (firstMonth: string) => {
   } catch (e) {
     // remove error
     throw new Error("Could not reset calendar");
-  }
-};
-
-export const saveNoteToDate = async (date: string, note: string) => {
-  try {
-    const existingData = await AsyncStorage.getItem(date);
-    if (existingData) {
-      const parsedOld = JSON.parse(existingData);
-      const newData = [...parsedOld, note];
-      await AsyncStorage.setItem(date, JSON.stringify(newData));
-    } else {
-      await AsyncStorage.setItem(date, JSON.parse(note));
-    }
-  } catch (error) {
-    throw new Error("Could not save note");
-  }
-};
-
-export const getNotesForDate = async (date: string) => {
-  try {
-    const data = await AsyncStorage.getItem(date);
-    data ? JSON.parse(data) : null;
-  } catch (error) {
-    throw new Error("Could not get notes");
   }
 };
 
@@ -147,51 +127,29 @@ export enum WorkWeek {
 */
 
 export const calculateWorkDays = (_workWeek: WorkWeek) => {
-  moment.updateLocale("sk", {
-    months: [
-      "Január",
-      "Február",
-      "Marec",
-      "Apríl",
-      "Máj",
-      "Jún",
-      "Júl",
-      "August",
-      "September",
-      "Október",
-      "November",
-      "December",
-    ],
-  });
   const dates: string[] = [];
-  // today and monday of todays week
   const now = moment();
   const firstMonday = now.clone().startOf("week");
-  // format("yyyy-MM-DD")
-  // counters
-  // count days from 1 (monday) to 7 (sunday) then back to 1
+
   let weekDayCount = 1;
-  // count work week workWeek.short % 2 = 1 ? short : long only increment
   let weekCount = 0;
   let workWeek = _workWeek;
   let week = firstMonday;
-
-  // loop for 57 weeks from
-  for (weekCount; weekCount < 57; weekCount++) {
+  for (weekCount; weekCount < 700; weekCount++) {
     if (weekCount > 0) {
       week.add(weekCount, "week");
     }
     for (weekDayCount; weekDayCount < 8; weekDayCount++) {
       if (workWeek === WorkWeek.Short) {
-        if (weekDayCount === 2 || weekDayCount === 3 || weekDayCount === 4) {
+        if (weekDayCount === 3 || weekDayCount === 4 || weekDayCount === 5) {
           dates.push(week.weekday(weekDayCount).format("yyyy-MM-DD"));
         }
       } else {
         if (
-          weekDayCount === 0 ||
           weekDayCount === 1 ||
-          weekDayCount === 5 ||
-          weekDayCount === 6
+          weekDayCount === 2 ||
+          weekDayCount === 6 ||
+          weekDayCount === 7
         ) {
           dates.push(week.weekday(weekDayCount).format("yyyy-MM-DD"));
         }
@@ -204,18 +162,96 @@ export const calculateWorkDays = (_workWeek: WorkWeek) => {
       workWeek = WorkWeek.Short;
     }
     week = moment().startOf("week");
-    console.log("PRVY DEN V TYZDNi", week.weekday(0).format("yyyy-MM-DD"));
   }
-
+  console.log("RETURNING DATES", dates);
   return dates;
 };
 
 const transform = (dates: string[]) => {
+  console.log("DATES???", dates);
+  if (dates.length === 1) {
+    console.log("Dont have values");
+  }
   let newData = {};
   // '2012-05-22': {color: '#70d7c7', textColor: 'white'},
   dates.forEach((day) => {
-    newData[day] = { color: "rgb(71 85 105)", textColor: "white" };
+    newData[day] = { color: "rgb(249, 157, 39)", textColor: "white" };
   });
 
   return newData;
+};
+
+export type DayData = {
+  notes?: string[];
+  time?: string;
+};
+
+export const saveNoteToDay = async (date: string, note: string) => {
+  console.log("SAVENOTEDAT", date);
+  try {
+    const existingData = await AsyncStorage.getItem(date);
+    console.log("Existing data", existingData);
+    if (existingData) {
+      const parsedOld = JSON.parse(existingData) as DayData;
+      console.log("PRADSEWDA", parsedOld.notes);
+      if (parsedOld.notes) {
+        console.log("IM HERE", parsedOld.notes);
+        const newNootes = parsedOld.notes;
+        newNootes.push(note);
+        console.log("Poznamocky zas", newNootes);
+        const newDataObj = { ...parsedOld, notes: newNootes };
+        return await AsyncStorage.setItem(date, JSON.stringify(newDataObj));
+      }
+      parsedOld.notes = [note];
+      await AsyncStorage.setItem(date, JSON.stringify(parsedOld));
+    } else {
+      const newDayData: DayData = { notes: [note] };
+      await AsyncStorage.setItem(date, JSON.stringify(newDayData));
+    }
+  } catch (error) {
+    throw new Error("Could not save note");
+  }
+};
+
+export const saveTimeToDay = async (date: string, time: string) => {
+  try {
+    const existingData = await AsyncStorage.getItem(date);
+    if (existingData) {
+      const parsedOld = JSON.parse(existingData) as DayData;
+      parsedOld.time = time;
+      await AsyncStorage.setItem(date, JSON.stringify(parsedOld));
+    } else {
+      const data: DayData = { time };
+      await AsyncStorage.setItem(date, JSON.stringify(data));
+    }
+  } catch (error) {
+    throw new Error("Could not save note");
+  }
+};
+
+export const deleteNoteForDay = async (date: string, note: string) => {
+  try {
+    const existingData = await AsyncStorage.getItem(date);
+    if (existingData) {
+      const parsedOld = JSON.parse(existingData) as DayData;
+      if (parsedOld.notes) {
+        const index = parsedOld.notes.indexOf(note, 0);
+        if (index > -1) {
+          parsedOld.notes.splice(index, 1);
+          return await AsyncStorage.setItem(date, JSON.stringify(parsedOld));
+        }
+      }
+    }
+  } catch (error) {
+    throw new Error("Could not delete note");
+  }
+};
+
+export const getDataForDate = async (date: string): Promise<DayData> => {
+  try {
+    const data = await AsyncStorage.getItem(date);
+    return data ? JSON.parse(data) : null;
+  } catch (error) {
+    throw new Error("Could not get notes");
+  }
 };

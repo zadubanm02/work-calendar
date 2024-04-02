@@ -5,11 +5,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
 import AddNoteScreen from "./screens/AddNoteScreen";
 import DayDetailScreen from "./screens/DayDetailScreen";
+import FillWeeksScreen from "./screens/FillWeeksScreen";
 
 export type RootStackParamList = {
   Home: undefined;
   AddNote: { day: string };
   DayDetail: { day: string };
+  FillWeeks: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -40,6 +42,14 @@ export default function Navigation() {
           }}
           name="DayDetail"
           component={DayDetailScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+            presentation: "modal",
+          }}
+          name="FillWeeks"
+          component={FillWeeksScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

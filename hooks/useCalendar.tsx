@@ -2,53 +2,50 @@ import React, { useEffect, useState } from "react";
 import {
   WorkWeek,
   calculateWorkDays,
+  deleteNoteForDay,
+  getDataForDate,
   getWorkDates,
   resetAllWorkDays,
   storeWorkDates,
 } from "../lib/asyncStorage";
-import moment from "moment";
+//import moment from "moment";
+import { useAtom } from "jotai";
+import {
+  dataAtom,
+  selectedDayAtom,
+  workDaysAtom,
+} from "../state/calendar.state";
 
 export const useCalendar = () => {
-  moment.updateLocale("sk", {
-    months: [
-      "Január",
-      "Február",
-      "Marec",
-      "Apríl",
-      "Máj",
-      "Jún",
-      "Júl",
-      "August",
-      "September",
-      "Október",
-      "November",
-      "December",
-    ],
-    days: [
-      "Pondelok",
-      "Utorok",
-      "Streda",
-      "Štrvtok",
-      "Piatok",
-      "Sobota",
-      "Nedeľa",
-    ],
-  });
-  moment.locale("sk");
+  const [selectedDate, setSelectedDate] = useAtom(selectedDayAtom);
+  const [workDays, setWorkDays] = useAtom(workDaysAtom);
 
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [workDays, setWorkDays] = useState<{}>({});
-  const [workWeek, setWorkWeek] = useState<WorkWeek>(WorkWeek.Short);
+  const [data, setData] = useAtom(dataAtom);
 
   const isSelected = (date: string) => {
     return date === selectedDate;
   };
 
-  const saveWorkWeeks = async () => {
-    const dates = calculateWorkDays(workWeek);
-    const result = await storeWorkDates(dates);
+  const handleDaySelect = (date: string) => {
+    setSelectedDate(date);
+    getDataForDate(date).then((data) => {
+      setData(data);
+    });
+  };
 
-    setWorkDays(result);
+  const saveWorkWeeks = (workWeek: WorkWeek) => {
+    const dates = calculateWorkDays(workWeek);
+    return storeWorkDates(dates).then((data) => {
+      return setWorkDays(data);
+    });
+  };
+
+  const handleDelete = (note: string) => {
+    deleteNoteForDay(selectedDate as string, note).then(() => {
+      getDataForDate(selectedDate as string).then((data) => {
+        setData(data);
+      });
+    });
   };
 
   const loadWorkDays = async () => {
@@ -56,12 +53,16 @@ export const useCalendar = () => {
     setWorkDays(data);
   };
 
-  const deleteAll = async () => {
-    await resetAllWorkDays();
+  const deleteAll = () => {
+    return resetAllWorkDays().then(() => {
+      setWorkDays({});
+    });
   };
 
   useEffect(() => {
-    setSelectedDate(moment().format("dddd DD.MM.YYYY"));
+    loadWorkDays()
+      .then(() => {})
+      .catch(() => {});
   }, []);
 
   return {
@@ -71,5 +72,7 @@ export const useCalendar = () => {
     isSelected,
     saveWorkWeeks,
     deleteAll,
+    handleDaySelect,
+    handleDelete,
   };
 };
