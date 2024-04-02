@@ -106,7 +106,6 @@ export default function HomeScreen() {
       color: "#000",
       textColor: "#fff",
     };
-    console.log("DATES", dates);
     return dates;
   }, [selectedDate, workDays]);
 
@@ -151,7 +150,8 @@ export default function HomeScreen() {
           textMonthFontWeight: "bold",
           selectedDayBackgroundColor: "#000",
           selectedDayTextColor: "#fff",
-          todayTextColor: "rgb(153 27 27)",
+          todayTextColor: "#fff",
+          todayBackgroundColor: "#C40075",
         }}
         // marked days are work days
         markingType={"period"}

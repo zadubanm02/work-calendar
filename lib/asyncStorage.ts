@@ -135,7 +135,7 @@ export const calculateWorkDays = (_workWeek: WorkWeek) => {
   let weekCount = 0;
   let workWeek = _workWeek;
   let week = firstMonday;
-  for (weekCount; weekCount < 57; weekCount++) {
+  for (weekCount; weekCount < 700; weekCount++) {
     if (weekCount > 0) {
       week.add(weekCount, "week");
     }
@@ -175,7 +175,7 @@ const transform = (dates: string[]) => {
   let newData = {};
   // '2012-05-22': {color: '#70d7c7', textColor: 'white'},
   dates.forEach((day) => {
-    newData[day] = { color: "rgb(71 85 105)", textColor: "white" };
+    newData[day] = { color: "rgb(249, 157, 39)", textColor: "white" };
   });
 
   return newData;

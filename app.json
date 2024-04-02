@@ -7,6 +7,9 @@
     },
     "android": {
       "package": "com.zadubanm.janka"
+    },
+    "ios": {
+      "bundleIdentifier": "com.zadubanm.janka"
     }
   }
 }
